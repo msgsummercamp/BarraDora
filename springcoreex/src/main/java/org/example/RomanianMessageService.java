@@ -1,8 +1,9 @@
 package org.example;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component("romanianMessageService")
+@Service("romanianMessageService")
 public class RomanianMessageService implements MessageService {
     @Override
     public String getMessage() {
