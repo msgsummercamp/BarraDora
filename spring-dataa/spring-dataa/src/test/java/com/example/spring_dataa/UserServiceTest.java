@@ -90,4 +90,11 @@ class UserServiceTest {
 
         verify(userRepository).deleteById(1L);
     }
+
+    @Test
+    void testCountUsers() {
+        when(userRepository.countUsers()).thenReturn(5L);
+        long count = userService.getTotalUserCount();
+        assertThat(count).isEqualTo(5L);
+    }
 }
