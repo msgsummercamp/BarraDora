@@ -2,6 +2,7 @@ package com.example.spring_boot_ex.controller;
 
 import com.example.spring_boot_ex.model.UserModel;
 import com.example.spring_boot_ex.service.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserModel> createUser(@RequestBody UserModel usermodel) {
+    public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel usermodel) {
         logger.info("POST /users called with user: {}", usermodel);
         UserModel createdUser = userService.createUser(usermodel);
         logger.info("User created with ID: {}", createdUser.getId());
