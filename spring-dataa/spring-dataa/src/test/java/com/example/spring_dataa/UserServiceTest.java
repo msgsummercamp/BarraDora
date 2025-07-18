@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class UserServiceTest {
@@ -25,15 +26,29 @@ class UserServiceTest {
     private UserService userService;
 
     private User sampleUser;
+    private long id;
+    private String username;
+    private String email;
+    private String password;
+    private String firstName;
+    private String lastName;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        sampleUser = new User(1L, "jdoe", "jdoe@example.com", "pass123", "John", "Doe");
+
+        id = 1L;
+        username = "jdoe";
+        email = "jdoe@example.com";
+        password = "pass123";
+        firstName = "John";
+        lastName = "Doe";
+
+        sampleUser = new User(id, username, email, password, firstName, lastName);
     }
 
     @Test
-    void testSaveUser() {
+    void saveNewUser_or_updateExistingUser_success() {
         when(userRepository.save(sampleUser)).thenReturn(sampleUser);
 
         User saved = userService.saveUser(sampleUser);
@@ -43,18 +58,18 @@ class UserServiceTest {
     }
 
     @Test
-    void testGetUserById() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(sampleUser));
+    void getUserById_userExists() {
+        when(userRepository.findById(id)).thenReturn(Optional.of(sampleUser));
 
-        Optional<User> found = userService.getUserById(1L);
+        Optional<User> found = userService.getUserById(id);
 
         assertThat(found).isPresent();
-        assertThat(found.get().getUsername()).isEqualTo("jdoe");
-        verify(userRepository).findById(1L);
+        assertThat(found.get().getUsername()).isEqualTo(username);
+        verify(userRepository).findById(id);
     }
 
     @Test
-    void testGetAllUsers() {
+    void getAllUsers_success() {
         List<User> users = Arrays.asList(sampleUser);
         when(userRepository.findAll()).thenReturn(users);
 
@@ -65,36 +80,48 @@ class UserServiceTest {
     }
 
     @Test
-    void testGetUserByUsername() {
-        when(userRepository.findByUsername("jdoe")).thenReturn(Optional.of(sampleUser));
+    void getUserByUsername_userExists() {
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(sampleUser));
 
-        Optional<User> user = userService.getUserByUsername("jdoe");
-
-        assertThat(user).isPresent();
-        assertThat(user.get().getEmail()).isEqualTo("jdoe@example.com");
-    }
-
-    @Test
-    void testGetUserByEmail() {
-        when(userRepository.findByEmail("jdoe@example.com")).thenReturn(Optional.of(sampleUser));
-
-        Optional<User> user = userService.getUserByEmail("jdoe@example.com");
+        Optional<User> user = userService.getUserByUsername(username);
 
         assertThat(user).isPresent();
-        assertThat(user.get().getUsername()).isEqualTo("jdoe");
+        assertThat(user.get().getEmail()).isEqualTo(email);
     }
 
     @Test
-    void testDeleteUserById() {
-        userService.deleteUserById(1L);
+    void getUserByEmail_userExists() {
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(sampleUser));
 
-        verify(userRepository).deleteById(1L);
+        Optional<User> user = userService.getUserByEmail(email);
+
+        assertThat(user).isPresent();
+        assertThat(user.get().getUsername()).isEqualTo(username);
     }
 
     @Test
-    void testCountUsers() {
+    void deleteUserById_userExists() {
+        userService.deleteUserById(id);
+
+        verify(userRepository).deleteById(id);
+    }
+
+    @Test
+    void testCountUsers_success() {
         when(userRepository.countUsers()).thenReturn(5L);
         long count = userService.getTotalUserCount();
         assertThat(count).isEqualTo(5L);
+    }
+
+    @Test
+    void getUserById_userRepositoryThrowsException() {
+        when(userRepository.findById(id)).thenThrow(new RuntimeException("Database error"));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            userService.getUserById(id);
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("Database error");
+        verify(userRepository).findById(id);
     }
 }
