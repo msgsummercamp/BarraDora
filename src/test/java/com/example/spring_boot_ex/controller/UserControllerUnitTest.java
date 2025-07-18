@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerUnitTest {
@@ -34,24 +33,30 @@ class UserControllerUnitTest {
 
     @Test
     void shouldReturnUserById() throws Exception {
+        String name = "Alice";
+        String email = "alice@gmail.com";
+
         this.mockMvc.perform(get("/users/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Alice"))
-                .andExpect(jsonPath("$.email").value("alice@gmail.com"));
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.email").value(email));
     }
 
     @Test
     void shouldCreateNewUser() throws Exception {
-        UserModel user = new UserModel(10L, "NewGuy", "newguy@example.com");
+        Long id = 10L;
+        String name = "NewGuy";
+        String email = "newguy@example.com";
+
+        UserModel user = new UserModel(id, name, email);
 
         this.mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("NewGuy"))
-                .andExpect(jsonPath("$.email").value("newguy@example.com"));
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.email").value(email));
     }
-
 }

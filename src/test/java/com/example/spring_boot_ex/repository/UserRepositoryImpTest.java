@@ -21,15 +21,17 @@ class UserRepositoryImpTest {
     }
 
     @Test
-    void shouldFindUserById_whenUserExists() {
+    void findById_userExists() {
+        String expectedName = "Alice";
+
         Optional<UserModel> result = userRepository.findById(1L);
 
         assertTrue(result.isPresent());
-        assertEquals("Alice", result.get().getName());
+        assertEquals(expectedName, result.get().getName());
     }
 
     @Test
-    void shouldReturnAllUsers() {
+    void returnAllUsers() {
         List<UserModel> users = userRepository.findAll();
 
         assertThat(users, hasSize(3));
@@ -37,14 +39,17 @@ class UserRepositoryImpTest {
     }
 
     @Test
-    void shouldSaveNewUser() {
-        UserModel newUser = new UserModel(4L, "Eve", "eve@gmail.com");
+    void saveNewUser() {
+        String expectedName = "Eve";
+        String expectedEmail = "eve@example.com";
 
+        UserModel newUser = new UserModel(4L, expectedName, expectedEmail);
         userRepository.save(newUser);
         Optional<UserModel> result = userRepository.findById(4L);
 
         assertTrue(result.isPresent());
-        assertEquals("Eve", result.get().getName());
+        assertEquals(expectedName, result.get().getName());
+        assertEquals(expectedEmail, result.get().getEmail());
     }
 }
 

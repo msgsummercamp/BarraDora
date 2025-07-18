@@ -4,6 +4,9 @@ import com.example.spring_boot_ex.model.UserModel;
 import com.example.spring_boot_ex.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,29 +19,35 @@ import static org.mockito.Mockito.*;
 
 class UserServiceUnitTest {
 
+    @Mock
     private UserRepository userRepository;
+
+    @InjectMocks
     private UserService userService;
 
     @BeforeEach
     void setup() {
-        userRepository = mock(UserRepository.class);
-        userService = new UserService(userRepository);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void shouldReturnUserById_whenUserExists() {
-        UserModel user = new UserModel(1L, "Alice", "alice@gmail.com");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    void returnUserById_userExists() {
+        Long userId = 1L;
+        String expectedName = "Alice";
+        String expectedEmail = "alice@gmail.com";
 
-        UserModel result = userService.getUserById(1L);
+        UserModel user = new UserModel(userId, expectedName, expectedEmail);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        assertThat(result.getName(), is("Alice"));
-        assertThat(result.getEmail(), containsString("@gmail.com"));
-        verify(userRepository, times(1)).findById(1L);
+        UserModel result = userService.getUserById(userId);
+
+        assertThat(result.getName(), is(expectedName));
+        assertThat(result.getEmail(), equalTo(expectedEmail));
+        verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
-    void shouldReturnAllUsers() {
+    void returnAllUsers_success() {
         List<UserModel> mockUsers = Arrays.asList(
                 new UserModel(1L, "Alice", "alice@gmail.com"),
                 new UserModel(2L, "Bob", "bob@gmail.com")
@@ -53,14 +62,31 @@ class UserServiceUnitTest {
     }
 
     @Test
-    void shouldCreateUserSuccessfully() {
-        UserModel newUser = new UserModel(5L, "Charlie", "charlie@gmail.com");
+    void createUser_success() {
+        Long userId = 5L;
+        String expectedName = "Charlie";
+        String expectedEmail = "charlie@gmail.com";
+
+        UserModel newUser = new UserModel(userId, expectedName, expectedEmail);
         when(userRepository.save(newUser)).thenReturn(newUser);
 
         UserModel result = userService.createUser(newUser);
 
-        assertThat(result.getName(), is("Charlie"));
-        assertThat(result.getEmail(), equalTo("charlie@gmail.com"));
+        assertThat(result.getName(), is(expectedName));
+        assertThat(result.getEmail(), equalTo(expectedEmail));
         verify(userRepository).save(newUser);
+    }
+
+    @Test
+    void getUserById_repositoryThrowsException() {
+        Long userId = 99L;
+        String expectedErrorMessage = "User not found with id " + userId;
+
+        when(userRepository.findById(userId)).thenThrow(new RuntimeException(expectedErrorMessage));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> userService.getUserById(userId));
+
+        assertThat(exception.getMessage(), is(expectedErrorMessage));
+        verify(userRepository, times(1)).findById(userId);
     }
 }
