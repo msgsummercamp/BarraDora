@@ -6,10 +6,11 @@ interface DogApiResponse {
 const button = document.getElementById('dogButton') as HTMLButtonElement;
 const image = document.getElementById('dogImage') as HTMLImageElement;
 const loading = document.getElementById('loading') as HTMLDivElement;
-
-button.addEventListener('click', async (): Promise<void> => {
+const errorMessage = document.getElementById('errorMessage') as HTMLDivElement;
+button.onclick = async () => {
     loading.style.display = 'block';
     image.style.display = 'none';
+    errorMessage.style.display = 'none';
 
     try {
         const response = await fetch('https://dog.ceo/api/breeds/image/random');
@@ -21,9 +22,11 @@ button.addEventListener('click', async (): Promise<void> => {
         image.src = data.message;
         image.style.display = 'block';
     } catch (error) {
-        console.error('Error:', error);
-        alert('Could not load dog image.');
+        errorMessage.textContent = 'Failed to load dog image. Please try again later.';
+        errorMessage.style.display = 'block';
+        image.style.display = 'none';
+        console.error('Error fetching dog image:', error);
     } finally {
         loading.style.display = 'none';
     }
-});
+};
