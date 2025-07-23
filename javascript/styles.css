@@ -1,0 +1,15 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+    padding: 2rem;
+}
+
+#dogImage {
+    max-width: 100%;
+    height: auto;
+    margin-top: 1rem;
+}
+
+#loading {
+    display: none;
+}

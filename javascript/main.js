@@ -1,24 +1,29 @@
-const button = document.getElementById('dogButton');
-const image = document.getElementById('dogImage');
-const loading = document.getElementById('loading');
+function fetchDogImage() {
+    const loading = document.getElementById('loading');
+    const image = document.getElementById('dogImage');
+    const errorMessage = document.getElementById('errorMessage');
 
-button.addEventListener('click', async () => {
     loading.style.display = 'block';
     image.style.display = 'none';
+    errorMessage.style.display = 'none';
 
-    try {
-        const response = await fetch('https://dog.ceo/api/breeds/image/random');
-        if (!response.ok) {
-            throw new Error('Network error');
-        }
-
-        const data = await response.json();
-        image.src = data.message;
-        image.style.display = 'block';
-    } catch (error) {
-        alert('Failed to load dog image.');
-        console.error(error);
-    } finally {
-        loading.style.display = 'none';
-    }
-});
+    fetch('https://dog.ceo/api/breeds/image/random')
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network error');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            image.src = data.message;
+            image.style.display = 'block';
+        })
+        .catch((error) => {
+            errorMessage.textContent = 'Failed to load dog image.';
+            errorMessage.style.display = 'block';
+            console.error(error);
+        })
+        .finally(() => {
+            loading.style.display = 'none';
+        });
+}
