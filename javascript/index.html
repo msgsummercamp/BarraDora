@@ -3,27 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Random Dog Gallery</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="main.js" defer></script>
-    <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            padding: 2rem;
-        }
-        #dogImage {
-            max-width: 100%;
-            height: auto;
-            margin-top: 1rem;
-        }
-        #loading {
-            display: none;
-        }
-    </style>
 </head>
 <body>
-<h1>Random Dog Gallery</h1>
-<button id="dogButton">Show me a dog!</button>
-<div id="loading">Loading...</div>
-<img id="dogImage" src="" alt="Random Dog Image">
+    <h1>Random Dog Gallery</h1>
+    <button id="dogButton">Show me a dog!</button>
+    <div id="loading">Loading...</div>
+    <img id="dogImage" src="" alt="Random Dog Image">
+    <div id="errorMessage" style="color: red; display: none;"></div>
 </body>
 </html>

@@ -1,10 +1,12 @@
 const button = document.getElementById('dogButton');
 const image = document.getElementById('dogImage');
 const loading = document.getElementById('loading');
+const errorMessage = document.getElementById('errorMessage');
 
-button.addEventListener('click', async () => {
+button.onclick = async () => {
     loading.style.display = 'block';
     image.style.display = 'none';
+    errorMessage.style.display = 'none';
 
     try {
         const response = await fetch('https://dog.ceo/api/breeds/image/random');
@@ -16,9 +18,10 @@ button.addEventListener('click', async () => {
         image.src = data.message;
         image.style.display = 'block';
     } catch (error) {
-        alert('Failed to load dog image.');
+        errorMessage.textContent = 'Failed to load dog image.';
+        errorMessage.style.display = 'block';
         console.error(error);
     } finally {
         loading.style.display = 'none';
     }
-});
+};
