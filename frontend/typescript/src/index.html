@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Random Dog Gallery (TypeScript)</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="../dist/main.js" defer></script>
+</head>
+<body>
+  <h1>Random Dog Gallery</h1>
+  <button onclick="fetchDogImage()">Show me a dog!</button>
+  <div id="loading">Loading...</div>
+  <img id="dogImage" src="" alt="Random Dog" style="display: none;"/>
+  <div id="errorMessage" style="color: red; display: none;"></div>
+</body>
+</html>
