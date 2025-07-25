@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import {Component, computed, DestroyRef, effect, inject, signal} from '@angular/core';
-import { RouterOutlet} from "@angular/router";
+import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
 import { Router } from '@angular/router';
 
@@ -14,9 +14,9 @@ type DogApiResponse = { message: string };
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, CommonModule, RouterOutlet, MatSnackBarModule],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, CommonModule, RouterOutlet, MatSnackBarModule, RouterLink, RouterLinkActive],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   title = 'angular-setup';
