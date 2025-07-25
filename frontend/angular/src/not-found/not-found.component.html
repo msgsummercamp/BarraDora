@@ -1,5 +1,7 @@
-<div *ngIf="isNotMainRoute()" class="not-found">
-    <h1>404 - Page Not Found</h1>
-    <p>Oops! The page you're looking for doesn't exist.</p>
-    <a routerLink="/login" class="home-link">Go to Login</a>
+<div class="not-found">
+    @if (isNotMainRoute()) {
+        <h1>404 - Page Not Found</h1>
+        <p>Oops! The page you're looking for doesn't exist.</p>
+        <a routerLink="/login" class="home-link">Go to Login</a>
+    }
 </div>

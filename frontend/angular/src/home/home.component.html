@@ -1,3 +1,16 @@
 <div class="home">
-    <h1>Welcome to the Home Page!</h1>
+    <h1>{{ 'welcome to the dog gallery!' | capitalize }}</h1>
+    @if (isLoading()) {
+        <div>Loading...</div>
+    }
+    @if (hasDogImage()) {
+        <img
+                [src]="dogImage()"
+                alt="Random Dog Image"
+                class="dog-image"
+        />
+    }
+    <button mat-raised-button class="fixed-button" (click)="fetchDogImage()">
+        Show me a dog!
+    </button>
 </div>
